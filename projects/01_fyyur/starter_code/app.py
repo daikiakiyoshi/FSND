@@ -12,11 +12,12 @@ import logging
 from logging import Formatter, FileHandler
 from flask_wtf import Form
 from forms import *
+from flask_migrate import Migrate
 #----------------------------------------------------------------------------#
 # App Config.
 #----------------------------------------------------------------------------#
 
-app = Flask(__name__)
+app = Flask(__name__, instance_relative_config=True)
 moment = Moment(app)
 app.config.from_object('config')
 db = SQLAlchemy(app)
@@ -26,6 +27,8 @@ db = SQLAlchemy(app)
 #----------------------------------------------------------------------------#
 # Models.
 #----------------------------------------------------------------------------#
+
+migrate = Migrate(app, db)
 
 class Venue(db.Model):
     __tablename__ = 'Venue'
