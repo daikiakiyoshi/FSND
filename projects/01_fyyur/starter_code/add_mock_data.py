@@ -1,4 +1,4 @@
-from app import Venue, Artist, db
+from app import Venue, Artist, Show, db
 
 # Add Venue
 db.session.add_all([
@@ -21,7 +21,17 @@ db.session.add_all([
 		image_link="https://images.unsplash.com/photo-1495223153807-b916f75de8c5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=334&q=80",
 		facebook_link="https://www.facebook.com/mattquevedo923251523"),
 	Artist(name="The Wild Sax Band", city="San Francisco", state="CA", phone="432-325-5432", genres=["Jazz", "Classical"],
-		image_link="https://images.unsplash.com/photo-1558369981-f9ca78462e61?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=794&q=80")
+		image_link="https://images.unsplash.com/photo-1558369981-f9ca78462e61?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=794&q=80"),
+	Show(venue_id=1, artist_id=1, start_time="2019-05-21T21:30:00.000Z"),
+	Show(venue_id=3, artist_id=2, start_time="2019-06-15T23:00:00.000Z"),
+	Show(venue_id=3, artist_id=3, start_time="2035-04-01T20:00:00.000Z"),
+	Show(venue_id=3, artist_id=3, start_time="2035-04-08T20:00:00.000Z"),
+	Show(venue_id=3, artist_id=3, start_time="2035-04-15T20:00:00.000Z")
    ])
+
+
+
+
+
 
 db.session.commit()
