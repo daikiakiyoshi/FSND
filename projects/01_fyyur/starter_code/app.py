@@ -171,14 +171,25 @@ def search_venues():
   # TODO: implement search on artists with partial string search. Ensure it is case-insensitive.
   # seach for Hop should return "The Musical Hop".
   # search for "Music" should return "The Musical Hop" and "Park Square Live Music & Coffee"
-  response={
-    "count": 1,
-    "data": [{
-      "id": 2,
-      "name": "The Dueling Pianos Bar",
-      "num_upcoming_shows": 0,
-    }]
-  }
+
+  # response={
+  #   "count": 1,
+  #   "data": [{
+  #     "id": 2,
+  #     "name": "The Dueling Pianos Bar",
+  #     "num_upcoming_shows": 0,
+  #   }]
+  # }
+  search_term = request.form.get('search_term', '')
+  venues = Venue.query.filter(Venue.name.ilike(f'%{search_term}%'))
+  response = {}
+  response['data'] = []
+  i = 1
+  for venue in venues:
+    response['count'] = i
+    response['data'].append({'id': venue.id, 'name': venue.name})
+    i += 1
+
   return render_template('pages/search_venues.html', results=response, search_term=request.form.get('search_term', ''))
 
 @app.route('/venues/<int:venue_id>')
@@ -336,14 +347,25 @@ def search_artists():
   # TODO: implement search on artists with partial string search. Ensure it is case-insensitive.
   # seach for "A" should return "Guns N Petals", "Matt Quevado", and "The Wild Sax Band".
   # search for "band" should return "The Wild Sax Band".
-  response={
-    "count": 1,
-    "data": [{
-      "id": 4,
-      "name": "Guns N Petals",
-      "num_upcoming_shows": 0,
-    }]
-  }
+  # response={
+  #   "count": 1,
+  #   "data": [{
+  #     "id": 4,
+  #     "name": "Guns N Petals",
+  #     "num_upcoming_shows": 0,
+  #   }]
+  # }
+
+  search_term = request.form.get('search_term', '')
+  artists = Artist.query.filter(Artist.name.ilike(f'%{search_term}%'))
+  response = {}
+  response['data'] = []
+  i = 1
+  for artist in artists:
+    response['count'] = i
+    response['data'].append({'id': artist.id, 'name': artist.name})
+    i += 1
+
   return render_template('pages/search_artists.html', results=response, search_term=request.form.get('search_term', ''))
 
 @app.route('/artists/<int:artist_id>')
@@ -555,7 +577,6 @@ def shows():
   #   "start_time": "2035-04-15T20:00:00.000Z"
   # }]
 
-
   shows = Show.query.all()
   data = []
   for show in shows:
@@ -585,7 +606,6 @@ def create_show_submission():
     # TODO: on unsuccessful db insert, flash an error instead.
     # e.g., flash('An error occurred. Show could not be listed.')
     # see: http://flask.pocoo.org/docs/1.0/patterns/flashing/
-    print(e)
     flash('An error occurred. Show could not be listed.')
     db.session.rollback()
   finally:
