@@ -262,7 +262,11 @@ def show_venue(venue_id):
     "past_shows_count": 1,
     "upcoming_shows_count": 1,
   }
+
+
+
   data = list(filter(lambda d: d['id'] == venue_id, [data1, data2, data3]))[0]
+
   return render_template('pages/show_venue.html', venue=data)
 
 #  Create Venue
@@ -321,10 +325,10 @@ def artists():
   #   "name": "The Wild Sax Band",
   # }]
 
-  raw_data = Artist.query.all()
+  artists = Artist.query.all()
   data = []
-  for row in raw_data:
-    data.append({"id": row.id, "name": row.name})
+  for artist in artists:
+    data.append({"id": artist.id, "name": artist.name})
   return render_template('pages/artists.html', artists=data)
 
 @app.route('/artists/search', methods=['POST'])
@@ -555,10 +559,8 @@ def shows():
   shows = Show.query.all()
   data = []
   for show in shows:
-    artist = show.artist
-    venue = show.venue
-    data.append({'venue_id': show.venue_id, 'venue_name': venue.name, 'artist_id': show.artist_id, 
-      'artist_name': artist.name, 'artist_image_link': artist.image_link, 'start_time': show.start_time})
+    data.append({'venue_id': show.venue_id, 'venue_name': show.venue.name, 'artist_id': show.artist_id, 
+      'artist_name': show.artist.name, 'artist_image_link': show.artist.image_link, 'start_time': show.start_time})
 
   return render_template('pages/shows.html', shows=data)
 
