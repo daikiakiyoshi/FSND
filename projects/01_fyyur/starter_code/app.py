@@ -42,6 +42,9 @@ class Venue(db.Model):
     phone = db.Column(db.String(120))
     genres = db.Column(db.String(120), nullable=False)
     image_link = db.Column(db.String(500))
+    website = db.Column(db.String(120))
+    seeking_talent = db.Column(db.Boolean)
+    seeking_description = db.Column(db.String(500))
     facebook_link = db.Column(db.String(120))
 
     # TODO: implement any missing fields, as a database migration using Flask-Migrate
@@ -63,6 +66,9 @@ class Artist(db.Model):
     genres = db.Column(db.String(120), nullable=False)
     image_link = db.Column(db.String(500))
     facebook_link = db.Column(db.String(120))
+    website = db.Column(db.String(120))
+    seeking_venue = db.Column(db.Boolean)
+    seeking_description = db.Column(db.String(500))
 
     # TODO: implement any missing fields, as a database migration using Flask-Migrate
     show = db.relationship('Show', backref='artist', lazy=True)
@@ -273,6 +279,8 @@ def show_venue(venue_id):
     "past_shows_count": 1,
     "upcoming_shows_count": 1,
   }
+
+
 
 
 
