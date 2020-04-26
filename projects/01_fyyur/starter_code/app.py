@@ -47,6 +47,11 @@ class Venue(db.Model):
     # TODO: implement any missing fields, as a database migration using Flask-Migrate
     show = db.relationship('Show', backref='venue', lazy=True)
 
+    def __repr__(self):
+      return (f'<Venue ID: {self.id}, name: {self.name}, city: {self.city},' 
+        f' state: {self.state}, address: {self.address}, phone: {self.phone},' 
+        f' genres: {self.genres}, image_link: {self.image_link}, facebook_link: {self.facebook_link}>')
+
 class Artist(db.Model):
     __tablename__ = 'Artist'
 
@@ -72,7 +77,7 @@ class Show(db.Model):
   venue_id = db.Column(db.Integer, db.ForeignKey('Venue.id'), nullable=False)
   artist_id = db.Column(db.Integer, db.ForeignKey('Artist.id'), nullable=False)
 
-
+db.create_all()
 
 #----------------------------------------------------------------------------#
 # Filters.
@@ -104,6 +109,7 @@ def index():
 def venues():
   # TODO: replace with real venues data.
   #       num_shows should be aggregated based on number of upcoming shows per venue.
+
   data=[{
     "city": "San Francisco",
     "state": "CA",
@@ -125,6 +131,30 @@ def venues():
       "num_upcoming_shows": 0,
     }]
   }]
+
+  raw_data = Venue.query.all()
+  temp_data = []
+  for row in raw_data:
+    temp_data.append({"city": row.city, "state": row.state, "venues": [{"id": row.id, "name": row.name}]})
+
+  data = []
+  for venue in temp_data:
+    if(len(data) == 0):
+      venue['venues'][0]['num_upcoming_shows'] = 0
+      data.append(venue)
+    else:
+      i = 0
+      inserted = False
+      for row in data:
+        if (venue['city'] == row['city']) and (venue['state'] == row['state']):
+          venue['venues'][0]['num_upcoming_shows'] = len(row['venues'])
+          data[i]['venues'].append(venue['venues'][0])
+          inserted = True
+        i += 1
+      if inserted == False:
+        venue['venues'][0]['num_upcoming_shows'] = 0
+        data.append(venue)
+
   return render_template('pages/venues.html', areas=data);
 
 @app.route('/venues/search', methods=['POST'])
